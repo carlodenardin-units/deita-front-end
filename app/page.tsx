@@ -28,10 +28,10 @@ export default function Home() {
                 const annotations = data.output.annotations;
 
                 // Ordina le annotazioni per posizione decrescente in modo da sostituire le parole senza influenzare le posizioni delle parole successive.
-                annotations.sort((a, b) => b[2] - a[2]);
+                annotations.sort((a: number[], b: number[]) => b[2] - a[2]);
 
                 // Sostituisci le parole con trattini
-                annotations.forEach(annotation => {
+                annotations.forEach((annotation: any[]) => {
                     const replacement = "-".repeat(annotation[2] - annotation[1]);
                     text = text.slice(0, annotation[1]) + replacement + text.slice(annotation[2]);
                 });
