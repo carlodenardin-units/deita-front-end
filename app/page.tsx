@@ -12,18 +12,31 @@ export default function Home() {
         // Puoi utilizzare fetch o un'altra libreria per le richieste HTTP
 
         // Esempio di richiesta fetch (assicurati di sostituire l'URL con l'effettivo endpoint dell'API)
-        fetch("/api/python/ehr", {
+        fetch("http://164.90.217.167:8000/api/python/v1", {
             method: "POST",
+            mode: "cors",
             body: JSON.stringify({ text: inputText }), // Invia il testo input come JSON
             headers: {
+                'Access-Control-Allow-Origin':'*',
                 "Content-Type": "application/json",
             },
         })
             .then((response) => response.json())
             .then((data) => {
                 // Aggiorna lo stato con il testo elaborato dall'API
-                console.log(data)
-                setOutputText(data.output);
+                let text = data.output.text;
+                const annotations = data.output.annotations;
+
+                // Ordina le annotazioni per posizione decrescente in modo da sostituire le parole senza influenzare le posizioni delle parole successive.
+                annotations.sort((a, b) => b[2] - a[2]);
+
+                // Sostituisci le parole con trattini
+                annotations.forEach(annotation => {
+                    const replacement = "-".repeat(annotation[2] - annotation[1]);
+                    text = text.slice(0, annotation[1]) + replacement + text.slice(annotation[2]);
+                });
+
+                setOutputText(text);
             })
             .catch((error) => {
                 console.error("Errore durante la richiesta all'API:", error);
