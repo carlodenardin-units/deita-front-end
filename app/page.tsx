@@ -3,7 +3,15 @@
 import { useState } from "react";
 
 export default function Home() {
-    const [inputText, setInputText] = useState("Il paziente Mario Rossi ha 22 anni e vive a Milano. Attualmente si trova nel reparto di cardiologia nella stanza 26. Il medico Baggio inizia l'intervento chirurgico alle ore 15:00 del giorno 17 ottobre 2023. L'intervento si terrà all'Ospedale Maggiore di Trieste."); // Stato per il testo di input
+    const example = [
+        "Il paziente Mario Rossi ha 22 anni e vive a Milano.",
+        "Il Paziente Daniele Pirandello è stato ammesso presso l'Ospedale Azienda Osp. Univ. G. Martino, ubicato nel comune di Messina, il giorno 14/03/1997 per un ricovero urgente. Il suo indirizzo è Stretto Ferraris, 51, 28819, Vignone (VB). Il Dottor Gabrieli Greco ha supervisionato il caso del Paziente Pirandello durante il suo soggiorno in ospedale.\n\nIl Paziente è stato portato in ospedale alle ore 17:30 del 14/03/1997 a causa di forti dolori al petto e difficoltà respiratorie. È stato immediatamente sottoposto a una serie di esami medici, tra cui un elettrocardiogramma e una radiografia del torace, al fine di determinare la causa dei suoi sintomi.\n\nI risultati degli esami hanno rivelato la presenza di un'infiammazione al livello dei polmoni, che è stata trattata con farmaci antinfiammatori e antibiotici. Il Paziente è stato tenuto sotto osservazione e monitorato costantemente per garantire il miglioramento delle sue condizioni di salute.\n\nDurante il suo soggiorno in ospedale, il Paziente ha ricevuto anche cure infermieristiche, tra cui la somministrazione di farmaci per il controllo del dolore e il monitoraggio accurato dei suoi segni vitali. Sono state effettuate visite mediche regolari da parte del Dottor Greco per valutare la risposta del Paziente al trattamento e apportare eventuali modifiche alla terapia.\n\nDopo sette giorni di ricovero, il Paziente Daniele Pirandello ha mostrato un notevole miglioramento dei suoi sintomi e una diminuzione dell'infiammazione polmonare. Il Dottor Greco ha deciso di dimetterlo il giorno 21/03/1997, alle ore 11:00, consigliando al Paziente di continuare ad assumere i farmaci prescritti e di fare controlli medici regolari per monitorare il suo stato di salute.\n\nIl Paziente è stato informato su come gestire adeguatamente la sua salute e su come prevenire future complicanze. È stato anche fornito un follow-up con il Dottor Greco, programmato per il 10/04/1997, presso lo studio medico del dottore, al fine di valutare ulteriormente il recupero del Paziente e apportare eventuali altri interventi medici necessari.\nFelice del risultato, il Paziente Daniele Pirandello è tornato a casa, portando con sé le prescrizioni mediche e consapevole dell'importanza di seguire una dieta equilibrata e di adottare uno stile di vita sano.",
+        "",
+        "",
+    ]
+
+    
+    const [inputText, setInputText] = useState(example[0]); // Stato per il testo di input
     const [outputText, setOutputText] = useState(""); // Stato per il testo di output
     const [isLoading, setIsLoading] = useState(false); // Stato per mostrare il caricamento
 
@@ -87,54 +95,63 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"><span className="underline underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">deita</span> - deidentifier of italian ehr</h1>
-            <br/>
             <div className="grid grid-cols-1 gap-4 relative w-full">
-                <div className="z-10 w-full items-center justify-between font-mono text-sm lg:flex">
-                    <textarea
-                        rows={10}
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)} // Aggiorna lo stato con il testo input
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Il paziente Mario Rossi ha 22 anni e vive a Milano."
-                    />
+                <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"><span className="underline underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">deita</span> - deidentifier of italian ehr</h1>
+                
+                <div className="grid grid-cols-4 gap-4 relative">
+                    <button onClick={() => setInputText(example[0])} type="button" className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"><u>Example 1</u></button>
+                    <button onClick={() => setInputText(example[1])} type="button" className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"><u>Example 2</u></button>
+                    <button onClick={() => setInputText(example[2])} type="button" className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"><u>Example 3</u></button>
+                    <button onClick={() => setInputText(example[3])} type="button" className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"><u>Example 4</u></button>
                 </div>
                 
+                <div className="grid grid-cols-1 gap-4 relative w-full">
+                    <div className="z-10 w-full items-center justify-between font-mono text-sm lg:flex">
+                        <textarea
+                            rows={10}
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)} // Aggiorna lo stato con il testo input
+                            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Il paziente Mario Rossi ha 22 anni e vive a Milano."
+                        />
+                    </div>
+                    
 
-                {!isLoading ? (
-                    <button
-                        type="button"
-                        onClick={handleDeidentify} // Gestisci il click del bottone
-                        className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                    >
-                        De-identifica
-                    </button>
-                ) : (
-                    <button
-                        disabled
-                        type="button"
-                        onClick={handleDeidentify} // Gestisci il click del bottone
-                        className="disabled:pointer-events-none text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                    >   
-                        <center>
-                        <svg aria-hidden="true" className="w-5 h-5 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-200" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
-                        </center>
-                        
-                    </button>
-                )}
-            </div>
-            <div className="grid grid-cols-2 gap-4 relative w-full">
-                <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#">
-                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">BiLSTM-CRF</h5>
-                    </a>
-                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputText}}></p>
+                    {!isLoading ? (
+                        <button
+                            type="button"
+                            onClick={handleDeidentify} // Gestisci il click del bottone
+                            className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                        >
+                            De-identifica
+                        </button>
+                    ) : (
+                        <button
+                            disabled
+                            type="button"
+                            onClick={handleDeidentify} // Gestisci il click del bottone
+                            className="disabled:pointer-events-none text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                        >   
+                            <center>
+                            <svg aria-hidden="true" className="w-5 h-5 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-200" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
+                            </center>
+                            
+                        </button>
+                    )}
                 </div>
-                <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#">
-                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">CRF</h5>
-                    </a>
-                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputText}}></p>
+                <div className="grid grid-cols-2 gap-4 relative w-full">
+                    <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <a href="#">
+                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">BiLSTM-CRF</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputText}}></p>
+                    </div>
+                    <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <a href="#">
+                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">CRF</h5>
+                        </a>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputText}}></p>
+                    </div>
                 </div>
             </div>
         </main>
