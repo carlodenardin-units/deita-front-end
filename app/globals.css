@@ -25,3 +25,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.Name { 
+    font-weight: bold;
+    color: blue; 
+}
+.Address { font-weight: bold; color: green; }
+.Age { font-weight: bold; color: red; }
