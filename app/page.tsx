@@ -5,14 +5,15 @@ import { useState } from "react";
 export default function Home() {
     const example = [
         "Il paziente Mario Rossi ha 22 anni e vive a Milano.",
+        "Il paziente Giuseppe Verdi (VRDGPP75H11L424Z) è stato ammesso al pronto soccorso dell'Ospedale Maggiore di Trieste alle ore 11:55 del 25/10/2023 a seguito di un incidente in macchina avvenuto in Viale XX Settembre a Trieste. Il paziente G. V. ha riportato un trauma alla gamba sinistra ed è stato spostato nel reparto di traumatologia alle ore 14:00. Il Dr. Minardi ha preso in cura il paziente G. V. e ha prescritto una radiografia della gamba sinistra per valutare l'entità del trauma. Il paziente G. V. è stato dimesso alle ore 17:00 con una prognosi di 30 giorni di gesso. Il numero di telefono del paziente è 040 1234567. L'email del paziente è giuseppe.verdi@gmail.com.",
         "Il Paziente Daniele Pirandello è stato ammesso presso l'Ospedale Azienda Osp. Univ. G. Martino, ubicato nel comune di Messina, il giorno 14/03/1997 per un ricovero urgente. Il suo indirizzo è Stretto Ferraris, 51, 28819, Vignone (VB). Il Dottor Gabrieli Greco ha supervisionato il caso del Paziente Pirandello durante il suo soggiorno in ospedale.\n\nIl Paziente è stato portato in ospedale alle ore 17:30 del 14/03/1997 a causa di forti dolori al petto e difficoltà respiratorie. È stato immediatamente sottoposto a una serie di esami medici, tra cui un elettrocardiogramma e una radiografia del torace, al fine di determinare la causa dei suoi sintomi.\n\nI risultati degli esami hanno rivelato la presenza di un'infiammazione al livello dei polmoni, che è stata trattata con farmaci antinfiammatori e antibiotici. Il Paziente è stato tenuto sotto osservazione e monitorato costantemente per garantire il miglioramento delle sue condizioni di salute.\n\nDurante il suo soggiorno in ospedale, il Paziente ha ricevuto anche cure infermieristiche, tra cui la somministrazione di farmaci per il controllo del dolore e il monitoraggio accurato dei suoi segni vitali. Sono state effettuate visite mediche regolari da parte del Dottor Greco per valutare la risposta del Paziente al trattamento e apportare eventuali modifiche alla terapia.\n\nDopo sette giorni di ricovero, il Paziente Daniele Pirandello ha mostrato un notevole miglioramento dei suoi sintomi e una diminuzione dell'infiammazione polmonare. Il Dottor Greco ha deciso di dimetterlo il giorno 21/03/1997, alle ore 11:00, consigliando al Paziente di continuare ad assumere i farmaci prescritti e di fare controlli medici regolari per monitorare il suo stato di salute.\n\nIl Paziente è stato informato su come gestire adeguatamente la sua salute e su come prevenire future complicanze. È stato anche fornito un follow-up con il Dottor Greco, programmato per il 10/04/1997, presso lo studio medico del dottore, al fine di valutare ulteriormente il recupero del Paziente e apportare eventuali altri interventi medici necessari.\nFelice del risultato, il Paziente Daniele Pirandello è tornato a casa, portando con sé le prescrizioni mediche e consapevole dell'importanza di seguire una dieta equilibrata e di adottare uno stile di vita sano.",
-        "",
-        "",
+        "Ammissione Ospedaliera - Paziente Michelangelo Parmitano\n\nIl paziente Michelangelo Parmitano è stato ricoverato presso l'Azienda Ospedaliera Papardo di Messina il 02/04/2017 a causa di forti sintomi influenzali e difficoltà respiratorie.\n\nMichelangelo si trovava a casa sua nella tranquilla cittadina di Chies D'Alpago quando ha iniziato a manifestare i primi sintomi. Inizialmente ha accusato una febbre persistente, accompagnata da dolori muscolari e malessere generale. Negli ultimi giorni, ha avvertito un peggioramento della sintomatologia, con un forte affaticamento e una tosse insistente.\n\nIl medico curante, il Dottor Roth, ha consigliato immediatamente il ricovero ospedaliero per effettuare una serie di esami approfonditi e fornire al paziente le cure necessarie. \n\nDopo l'arrivo presso l'Azienda Ospedaliera Papardo, Michelangelo è stato sottoposto a un controllo completo, incluso un esame del sangue, una radiografia toracica e un tampone naso-faringeo per il COVID-19. I risultati hanno evidenziato un'infezione respiratoria di origine virale, causata da un ceppo influenzale particolarmente aggressivo.\n\nIl paziente è stato immediatamente posto in isolamento precauzionale all'interno del reparto malattie infettive, per evitare la diffusione del virus ad altri pazienti. La Stanza 305, riservata a casi simili, è stata assegnata a Michelangelo.\n\nIl team medico ha prescritto a Michelangelo un trattamento antivirale e terapia sintomatica per alleviare i sintomi. Inoltre, è stato sottoposto a un monitoraggio costante dei parametri vitali e a regolari controlli medici per valutare l'evoluzione della sua condizione.\n\nLa prognosi per Michelangelo dipenderà anche dalla sua risposta al trattamento e dalla capacità del suo sistema immunitario di combattere l'infezione. Il personale sanitario si impegna a fornire un'assistenza completa e a garantire il suo benessere durante il ricovero ospedaliero.",
     ]
 
     
     const [inputText, setInputText] = useState(example[0]); // Stato per il testo di input
-    const [outputText, setOutputText] = useState(""); // Stato per il testo di output
+    const [outputTextBiLSTMCRF, setOutputTextBiLSTMCRF] = useState(""); // Stato per il testo di output
+    const [outputTextCRF, setOutputTextCRF] = useState(""); // Stato per il testo di output
     const [isLoading, setIsLoading] = useState(false); // Stato per mostrare il caricamento
 
     // Funzione per gestire il click del bottone "de-identifica" e inviare il testo all'API Python
@@ -33,58 +34,108 @@ export default function Home() {
             .then((response) => response.json())
             .then((data) => {
                 // Aggiorna lo stato con il testo elaborato dall'API
-                let text = data.output.text;
+                let text_bilstmcrf = data.bilstmcrf.text;
+                let text_crf = data.crf.text
                 // Ordina le annotazioni per posizione in modo crescente
-                const annotations = data.output.annotations.sort((a: number[], b: number[]) => a[1] - b[1]);
+                const annotations_bilstmcrf = data.bilstmcrf.annotations.sort((a: number[], b: number[]) => a[1] - b[1]);
+                const annotations_crf = data.crf.annotations.sort((a: number[], b: number[]) => a[1] - b[1]);
 
-                let transformedText = text;
-                let offset = 0;
+                let transformedTextBilstmcrf = text_bilstmcrf;
+                var offset = 0;
 
-                annotations.forEach((annotation: [any, any, any, any]) => {
-                const [word, start, end, type] = annotation;
-                var transformedTextPart = ``;
+                annotations_bilstmcrf.forEach((annotation: [any, any, any, any]) => {
+                    const [word, start, end, type] = annotation;
+                    var transformedTextPart = ``;
 
-                if (type == "Address") {
-                    transformedTextPart = `<span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">${word} (${type})</span>`
-                } else if (type == "Age") {
-                    transformedTextPart = `<span class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">${word} (${type})</span>`
-                } else if (type == "Date") {
-                    transformedTextPart = `<span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">${word} (${type})</span>`
-                } else if (type == "Email") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "Hospital") {
-                    transformedTextPart = `<span class="bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-pink-900 dark:text-pink-300">${word} (${type})</span>`
-                } else if (type == "ID") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "Initials") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "Internal_Location") {
-                    transformedTextPart = `<span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">${word} (${type})</span>`
-                } else if (type == "Name") {
-                    transformedTextPart = `<span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">${word} (${type})</span>`
-                } else if (type == "Other") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "Phone") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "Profession") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "SSN") {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                } else if (type == "Time") {
-                    transformedTextPart = `<span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">${word} (${type})</span>`
-                } else {
-                    transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
-                }
+                    if (type == "Address") {
+                        transformedTextPart = `<span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">${word} (${type})</span>`
+                    } else if (type == "Age") {
+                        transformedTextPart = `<span class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">${word} (${type})</span>`
+                    } else if (type == "Date") {
+                        transformedTextPart = `<span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">${word} (${type})</span>`
+                    } else if (type == "Email") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Hospital") {
+                        transformedTextPart = `<span class="bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-pink-900 dark:text-pink-300">${word} (${type})</span>`
+                    } else if (type == "ID") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Initials") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Internal_Location") {
+                        transformedTextPart = `<span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">${word} (${type})</span>`
+                    } else if (type == "Name") {
+                        transformedTextPart = `<span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">${word} (${type})</span>`
+                    } else if (type == "Other") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Phone") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Profession") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "SSN") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Time") {
+                        transformedTextPart = `<span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">${word} (${type})</span>`
+                    } else {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    }
 
-                transformedText =
-                    transformedText.slice(0, start + offset) +
-                    transformedTextPart +
-                    transformedText.slice(end + offset);
+                    transformedTextBilstmcrf =
+                    transformedTextBilstmcrf.slice(0, start + offset) +
+                        transformedTextPart +
+                        transformedTextBilstmcrf.slice(end + offset);
 
-                    offset += transformedTextPart.length - (end - start);
+                        offset += transformedTextPart.length - (end - start);
                 });
 
-                setOutputText(transformedText);
+                let transformedTextCRF = text_crf;
+                var offset = 0;
+
+                annotations_bilstmcrf.forEach((annotation: [any, any, any, any]) => {
+                    const [word, start, end, type] = annotation;
+                    var transformedTextPart = ``;
+
+                    if (type == "Address") {
+                        transformedTextPart = `<span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">${word} (${type})</span>`
+                    } else if (type == "Age") {
+                        transformedTextPart = `<span class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">${word} (${type})</span>`
+                    } else if (type == "Date") {
+                        transformedTextPart = `<span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">${word} (${type})</span>`
+                    } else if (type == "Email") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Hospital") {
+                        transformedTextPart = `<span class="bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-pink-900 dark:text-pink-300">${word} (${type})</span>`
+                    } else if (type == "ID") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Initials") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Internal_Location") {
+                        transformedTextPart = `<span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">${word} (${type})</span>`
+                    } else if (type == "Name") {
+                        transformedTextPart = `<span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">${word} (${type})</span>`
+                    } else if (type == "Other") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Phone") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Profession") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "SSN") {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    } else if (type == "Time") {
+                        transformedTextPart = `<span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">${word} (${type})</span>`
+                    } else {
+                        transformedTextPart = `<span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">${word} (${type})</span>`
+                    }
+
+                    transformedTextCRF =
+                    transformedTextCRF.slice(0, start + offset) +
+                        transformedTextPart +
+                        transformedTextCRF.slice(end + offset);
+
+                        offset += transformedTextPart.length - (end - start);
+                });
+
+                setOutputTextBiLSTMCRF(transformedTextBilstmcrf);
+                setOutputTextCRF(transformedTextCRF)
                 setIsLoading(false); // Nascondi il caricamento
             })
             .catch((error) => {
@@ -144,13 +195,13 @@ export default function Home() {
                         <a href="#">
                             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">BiLSTM-CRF</h5>
                         </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputText}}></p>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputTextBiLSTMCRF}}></p>
                     </div>
                     <div className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                         <a href="#">
                             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">CRF</h5>
                         </a>
-                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputText}}></p>
+                        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400" dangerouslySetInnerHTML={{__html: outputTextCRF}}></p>
                     </div>
                 </div>
             </div>
