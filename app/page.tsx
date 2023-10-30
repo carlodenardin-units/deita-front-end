@@ -91,7 +91,7 @@ export default function Home() {
                 let transformedTextCRF = text_crf;
                 var offset = 0;
 
-                annotations_bilstmcrf.forEach((annotation: [any, any, any, any]) => {
+                annotations_crf.forEach((annotation: [any, any, any, any]) => {
                     const [word, start, end, type] = annotation;
                     var transformedTextPart = ``;
 
